@@ -1,11 +1,24 @@
+//VARIABLES
 const canvas = document.querySelector('#game'); //seleciona la etiqueta canvas
 const game = canvas.getContext('2d'); //se define que es 2d
+let canvasSize;
+let ElementsSize;
+//BOTONES
+const btn_up = document.querySelector('#btn-up');
+const btn_down = document.querySelector('#btn-down');
+const btn_left = document.querySelector('#btn-left');
+const btn_right = document.querySelector('#btn-right');
 
-/*aca de pone en escucha a la funcion a continuacion y en load apenad carge el html
-se ejecuta la funcion*/
-window.addEventListener('load', startGame);
 
-function startGame() {
+/*aca de pone en escucha a la funcion a continuacion y en
+load cada vez que el html carge se ejecuta la funcion*/
+window.addEventListener('load', SetCanvaSive);
+
+/*evento que escucha el cambio en el tamaño de la ventana dinamicamente*/
+window.addEventListener('resize', SetCanvaSive);
+
+
+function SetCanvaSive() {
     // lugar donde inicia el trazo(se genera un cuadrado)
     //game.fillStyle = 'purple'; //color del cuadrado
     //game.fillRect(0, 50, 100, 100);
@@ -13,7 +26,7 @@ function startGame() {
     //game.font = '30px Arial'; //tamaño de la fuente
     //game.fillText('Hola', 2, 6); //escribe el texto
 
-    let canvasSize;
+    //Tamaño del canvas
     if (window.innerHeight > window.innerWidth) {
         canvasSize = window.innerWidth * 0.8;
     } else {
@@ -24,13 +37,84 @@ function startGame() {
     canvas.setAttribute('width', canvasSize);
     canvas.setAttribute('height', canvasSize);
 
-    const ElementsSize = canvasSize / 10;
-    console.log(canvasSize, ElementsSize);
+    ElementsSize = canvasSize / 10;
+
+    startGame();
+}
+
+function startGame() {
+
     game.font = ElementsSize + 'px Verdana';
     game.textAlign = 'end';
 
-    for (let i = 1; i <= 10; i++) {
-        game.fillText(emojis['X'], (ElementsSize * i), (ElementsSize));
-    }
+    const map = maps[0];
+    const mapRows = map.trim().split('\n'); //se convierte el string en arreglo y se le da espacios
 
+    //Ahora se quiere separar el vector por cada elemento (matriz)
+    const mapRowsCols = mapRows.map(row => row.trim().split(''));
+
+
+    // for (let row = 1; row <= 10; row++) {
+    //     for (let column = 1; column <= 10; column++) {
+    //         game.fillText(emojis[mapRowsCols[row - 1][column - 1]], ElementsSize * column, ElementsSize * row);
+    //     }
+    // }
+
+    // para hacer lo anterior se puede usar un forEach del siguiente modo
+
+
+    mapRowsCols.forEach((row, rowI) => {
+        row.forEach((col, colI) => {
+            //console.log(emojis[col]);
+            //col recorre cada una de las posiciones de la matriz y devuelve su contenido
+            //console.log(rowI, colI);
+            const posx = ElementsSize * (colI + 1);
+            const posy = ElementsSize * (rowI + 1);
+            game.fillText(emojis[col], posx, posy);
+        });
+    });
+}
+
+//PARA BOTONES DEL TECLADO DE WINDOWS
+window.addEventListener('keydown',moveByKeys);
+//EN ESCUCHA LOS BOTONES DENTRO DEL INDEX.HTML
+btn_up.addEventListener('click', moveUp);
+btn_down.addEventListener('click', moveDown);
+btn_left.addEventListener('click', moveLeft);
+btn_right.addEventListener('click', moveRight);
+
+//FUNCIONES DE LOS BOTONES DEL TECLADO
+function moveByKeys(event) {
+    console.log(event);
+    /*switch (event.keyCode) {
+        case 38:
+            moveUp();
+            break;
+        case 40:
+            moveDown();
+            break;
+        case 37:
+            moveLeft();
+            break;
+        case 39:
+            moveRight();
+            break;
+    }*/
+}
+
+//FUNCIONES DE LOS BOTONES
+function moveUp() {
+    console.log('up');
+}
+
+function moveDown() {
+console.log('down');
+}
+
+function moveLeft() {
+console.log('left');
+}
+
+function moveRight() {
+console.log('right');
 }
