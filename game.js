@@ -3,6 +3,12 @@ const canvas = document.querySelector('#game'); //seleciona la etiqueta canvas
 const game = canvas.getContext('2d'); //se define que es 2d
 let canvasSize;
 let ElementsSize;
+
+const playerPosition = {
+    x: undefined,
+    y: undefined
+}
+
 //BOTONES
 const btn_up = document.querySelector('#btn-up');
 const btn_down = document.querySelector('#btn-down');
@@ -17,7 +23,7 @@ window.addEventListener('load', SetCanvaSive);
 /*evento que escucha el cambio en el tamaño de la ventana dinamicamente*/
 window.addEventListener('resize', SetCanvaSive);
 
-
+/*TAMAÑO DEL CANVA*/
 function SetCanvaSive() {
     // lugar donde inicia el trazo(se genera un cuadrado)
     //game.fillStyle = 'purple'; //color del cuadrado
@@ -33,7 +39,7 @@ function SetCanvaSive() {
         canvasSize = window.innerHeight * 0.8;
     }
 
-    // para ajustar el tamaño del canvas al tamaño de la ventana
+    // para ajustar el tamaño del canvas al tamaño de la ventana como un cuadrado
     canvas.setAttribute('width', canvasSize);
     canvas.setAttribute('height', canvasSize);
 
@@ -42,8 +48,8 @@ function SetCanvaSive() {
     startGame();
 }
 
-function startGame() {
 
+function startGame() {
     game.font = ElementsSize + 'px Verdana';
     game.textAlign = 'end';
 
@@ -54,11 +60,11 @@ function startGame() {
     const mapRowsCols = mapRows.map(row => row.trim().split(''));
 
 
-    // for (let row = 1; row <= 10; row++) {
-    //     for (let column = 1; column <= 10; column++) {
-    //         game.fillText(emojis[mapRowsCols[row - 1][column - 1]], ElementsSize * column, ElementsSize * row);
-    //     }
-    // }
+    /*for (let row = 1; row <= 10; row++) {
+        for (let column = 1; column <= 10; column++) {
+            game.fillText(emojis[mapRowsCols[row - 1][column - 1]], ElementsSize * column, ElementsSize * row);
+        }
+    }*/
 
     // para hacer lo anterior se puede usar un forEach del siguiente modo
 
@@ -70,13 +76,27 @@ function startGame() {
             //console.log(rowI, colI);
             const posx = ElementsSize * (colI + 1);
             const posy = ElementsSize * (rowI + 1);
+
+            if (col == 'O') {
+                playerPosition.x = posx;
+                playerPosition.y = posy;
+                console.log(playerPosition);
+            }
             game.fillText(emojis[col], posx, posy);
         });
     });
+    movePlayer();
+}
+
+//MOVER JUGADOR AL INICIAR EL JUEGO
+function movePlayer() {
+    game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
+
 }
 
 //PARA BOTONES DEL TECLADO DE WINDOWS
-window.addEventListener('keydown',moveByKeys);
+window.addEventListener('keydown', moveByKeys);
+
 //EN ESCUCHA LOS BOTONES DENTRO DEL INDEX.HTML
 btn_up.addEventListener('click', moveUp);
 btn_down.addEventListener('click', moveDown);
@@ -85,9 +105,15 @@ btn_right.addEventListener('click', moveRight);
 
 //FUNCIONES DE LOS BOTONES DEL TECLADO
 function moveByKeys(event) {
-    console.log(event);
-    /*switch (event.keyCode) {
-        case 38:
+    //console.log(event);
+    /*METODO ALTERNAIVO
+    *if (event.key == 'ArrowUp') moveUp();
+    else if (event.key == 'ArrowLeft') moveLeft();
+    else if (event.key == 'ArrowRight') moveRight();
+    else if (event.key == 'ArrowDown') moveDown(); */
+
+    switch (event.keyCode) {
+        case 38: //ES EL NUMERO DEL keyCode DE LA TECLA
             moveUp();
             break;
         case 40:
@@ -99,22 +125,24 @@ function moveByKeys(event) {
         case 39:
             moveRight();
             break;
-    }*/
+    }
 }
 
 //FUNCIONES DE LOS BOTONES
 function moveUp() {
-    console.log('up');
+    console.log(' Ir a up');
+    playerPosition.y -= ElementsSize;
+    movePlayer();
 }
 
 function moveDown() {
-console.log('down');
+    console.log('Ir a down');
 }
 
 function moveLeft() {
-console.log('left');
+    console.log('Ir a left');
 }
 
 function moveRight() {
-console.log('right');
+    console.log('Ir a right');
 }
