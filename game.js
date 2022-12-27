@@ -3,6 +3,7 @@ const canvas = document.querySelector('#game'); //seleciona la etiqueta canvas
 const game = canvas.getContext('2d'); //se define que es 2d
 let canvasSize;
 let ElementsSize;
+let level =0;
 
 const playerPosition = {//VARIABLES POSICIONES X,Y
     x: undefined,
@@ -13,6 +14,8 @@ const giftPosition = {
     x: undefined,
     y: undefined,
 }
+
+let enemigosPosition = [];
 
 //BOTONES
 const btn_up = document.querySelector('#btn-up');
@@ -50,16 +53,22 @@ function SetCanvaSive() {
 
     ElementsSize = canvasSize / 10
     ElementsSize = Math.floor(ElementsSize); //redondea el numero hacia abajo
-    console.log('tamaño de la division ',ElementsSize)
+    console.log('tamaño de la division ', ElementsSize)
     startGame();
 }
 
 
 function startGame() {
+
     game.font = ElementsSize + 'px Verdana';
     game.textAlign = 'end';
 
-    const map = maps[0];
+    const map = maps[level];
+    if(!map){
+        gameWin();
+        return;
+    }
+
     const mapRows = map.trim().split('\n'); //se convierte el string en arreglo y se le da espacios
 
     //Ahora se quiere separar el vector por cada elemento (matriz)
@@ -72,6 +81,7 @@ function startGame() {
         }
     }*/
 
+    enemigosPosition=[];
     // para hacer lo anterior se puede usar un forEach del siguiente modo
 
     //SE BORRA TODO
@@ -95,9 +105,11 @@ function startGame() {
                 giftPosition.x = posx;
                 giftPosition.y = posy;
                 console.log(giftPosition);
-                if(playerPosition.x == giftPosition.x && playerPosition.y == giftPosition.y){
-                    console.log('Ganaste');
-                }
+            } else if (col == 'X') {
+                enemigosPosition.push({
+                    x: posx,
+                    y: posy
+                });
             }
             game.fillText(emojis[col], posx, posy);
         });
@@ -107,8 +119,40 @@ function startGame() {
 
 //MOVER JUGADOR AL INICIAR EL JUEGO
 function movePlayer() {
+
+    /*REALIZA LAS VALIDACIONES SI DE HIZO UNA COLICION CON EL REGALO*/
+    const giftColisionX = playerPosition.x == giftPosition.x;
+    const giftColisionY = playerPosition.y == giftPosition.y;
+    const giftColision = giftColisionX && giftColisionY;
+
+    if (giftColision) {
+        levelWin();
+    }
+
+    /* find VALIDA UNA POR UNA LAS POSICIONES SI EL JUGADOR
+    * Y EL ENEMIGO ESTAN EN LA MISMA POSICION */
+    const enemigoColision = enemigosPosition.find(enemy => {
+       const  enemyColisionX=enemy.x==playerPosition.x;
+       const  enemyColisionY=enemy.y==playerPosition.y
+         return enemyColisionX && enemyColisionY;
+    });
+    if (enemigoColision) {
+        console.log('Te chocaste, perdiste');
+    }
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 
+}
+
+function levelWin() {
+    console.log('Ganaste');
+    level++;
+
+    console.log('nivel',level);
+    startGame()
+}
+
+function gameWin() {
+    alert('Ganaste el juego');
 }
 
 //PARA BOTONES DEL TECLADO DE WINDOWS
