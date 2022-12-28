@@ -164,7 +164,7 @@ function movePlayer() {
 function levelWin() {
     console.log('Ganaste');
     level++;
-
+    clearInterval(timeInterval);
     console.log('nivel', level);
     startGame()
 }
