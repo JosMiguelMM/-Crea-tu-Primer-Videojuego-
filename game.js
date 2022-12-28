@@ -3,7 +3,15 @@ const canvas = document.querySelector('#game'); //seleciona la etiqueta canvas
 const game = canvas.getContext('2d'); //se define que es 2d
 let canvasSize;
 let ElementsSize;
-let level =0;
+let level = 0;
+let lives = 3;
+
+let timeStart;
+let timePlayer;
+let timeInterval;
+
+const corazones = document.querySelector('#lives');
+const spanTiempo = document.querySelector('#time');
 
 const playerPosition = {//VARIABLES POSICIONES X,Y
     x: undefined,
@@ -59,14 +67,19 @@ function SetCanvaSive() {
 
 
 function startGame() {
-
     game.font = ElementsSize + 'px Verdana';
     game.textAlign = 'end';
 
     const map = maps[level];
-    if(!map){
+    if (!map) {
         gameWin();
         return;
+    }
+    showLives();
+
+    if(!timeStart){
+        timeStart = Date.now();
+        timeInterval = setInterval(showTime, 1000);
     }
 
     const mapRows = map.trim().split('\n'); //se convierte el string en arreglo y se le da espacios
@@ -81,7 +94,7 @@ function startGame() {
         }
     }*/
 
-    enemigosPosition=[];
+    enemigosPosition = [];
     // para hacer lo anterior se puede usar un forEach del siguiente modo
 
     //SE BORRA TODO
@@ -132,12 +145,12 @@ function movePlayer() {
     /* find VALIDA UNA POR UNA LAS POSICIONES SI EL JUGADOR
     * Y EL ENEMIGO ESTAN EN LA MISMA POSICION */
     const enemigoColision = enemigosPosition.find(enemy => {
-       const  enemyColisionX=enemy.x==playerPosition.x;
-       const  enemyColisionY=enemy.y==playerPosition.y
-         return enemyColisionX && enemyColisionY;
+        const enemyColisionX = enemy.x == playerPosition.x;
+        const enemyColisionY = enemy.y == playerPosition.y
+        return enemyColisionX && enemyColisionY;
     });
     if (enemigoColision) {
-        console.log('Te chocaste, perdiste');
+        levelFail();
     }
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 
@@ -147,12 +160,38 @@ function levelWin() {
     console.log('Ganaste');
     level++;
 
-    console.log('nivel',level);
+    console.log('nivel', level);
     startGame()
 }
 
 function gameWin() {
-    alert('Ganaste el juego');
+    alert('Terminaste el juego');
+    clearInterval(timeInterval);
+}
+
+function levelFail() {
+    lives--;
+    if (lives <= 0) {
+        level = 0;
+        lives = 3;
+        timeStart = undefined;
+    }
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
+    startGame();
+}
+
+function showLives() {
+    /*
+    * se crea un arreglo que  ponen emojis de corazones en las posiciones
+    * segun el numero de vidas */
+    const heartArray = Array(lives).fill(emojis['HEART'])//se crea un array con la cantidad de vidas
+    corazones.innerHTML = heartArray.join(' ');//se une el array con el separador que se le indique
+    //console.log(heartArray);
+}
+
+function showTime(){
+    spanTiempo.innerHTML=Date.now()-timeStart;
 }
 
 //PARA BOTONES DEL TECLADO DE WINDOWS
