@@ -15,6 +15,7 @@ const result=document.querySelector('#result');
 const corazones = document.querySelector('#lives');
 const spanTiempo = document.querySelector('#time');
 
+
 const playerPosition = {//VARIABLES POSICIONES X,Y
     x: undefined,
     y: undefined
@@ -32,6 +33,7 @@ const btn_up = document.querySelector('#btn-up');
 const btn_down = document.querySelector('#btn-down');
 const btn_left = document.querySelector('#btn-left');
 const btn_right = document.querySelector('#btn-right');
+const reiniciar=document.querySelector('#btn-reset');
 
 
 /*aca de pone en escucha a la funcion a continuacion y en
@@ -40,6 +42,16 @@ window.addEventListener('load', SetCanvaSive);
 
 /*evento que escucha el cambio en el tamaño de la ventana dinamicamente*/
 window.addEventListener('resize', SetCanvaSive);
+reiniciar.addEventListener('click',resetN);
+
+function resetN(){
+    level=0;
+    lives=3;
+    timeStart=undefined;
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
+    SetCanvaSive();
+}
 
 /*TAMAÑO DEL CANVA*/
 function SetCanvaSive() {
