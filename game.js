@@ -7,8 +7,10 @@ let level = 0;
 let lives = 3;
 
 let timeStart;
-let timePlayer;
 let timeInterval;
+
+const recordTime=document.querySelector('#record');
+const result=document.querySelector('#result');
 
 const corazones = document.querySelector('#lives');
 const spanTiempo = document.querySelector('#time');
@@ -62,6 +64,8 @@ function SetCanvaSive() {
     ElementsSize = canvasSize / 10
     ElementsSize = Math.floor(ElementsSize); //redondea el numero hacia abajo
     console.log('tamaño de la division ', ElementsSize)
+    playerPosition.x = undefined;
+    playerPosition.y = undefined;
     startGame();
 }
 
@@ -76,10 +80,11 @@ function startGame() {
         return;
     }
     showLives();
+    showRecordTime();
 
     if(!timeStart){
         timeStart = Date.now();
-        timeInterval = setInterval(showTime, 1000);
+        timeInterval = setInterval(showTime, 100);
     }
 
     const mapRows = map.trim().split('\n'); //se convierte el string en arreglo y se le da espacios
@@ -167,6 +172,19 @@ function levelWin() {
 function gameWin() {
     alert('Terminaste el juego');
     clearInterval(timeInterval);
+    const recordTime=localStorage.getItem('record_time');
+    let playerTime = Date.now()- timeStart;
+    if(recordTime){
+        if(recordTime>=playerTime){
+            localStorage.setItem('record_time',playerTime);
+            result.innerHTML = 'Nuevo record alcanzado';
+        }else{
+            result.innerHTML='No superaste el record';
+        }
+    }else{
+        localStorage.setItem('record_time',playerTime);
+        alert('Nuevo record');
+    }
 }
 
 function levelFail() {
@@ -192,6 +210,10 @@ function showLives() {
 
 function showTime(){
     spanTiempo.innerHTML=Date.now()-timeStart;
+}
+
+function showRecordTime(){
+    record.innerHTML=localStorage.getItem('record_time');
 }
 
 //PARA BOTONES DEL TECLADO DE WINDOWS
