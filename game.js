@@ -208,7 +208,8 @@ function levelFail() {
     }
     playerPosition.x = undefined;
     playerPosition.y = undefined;
-    startGame();
+    game.fillText(emojis['BLOW'],playerPosition.x, playerPosition.y);
+    setTimeout(startGame, 500);
 }
 
 function showLives() {
@@ -270,7 +271,6 @@ function moveUp() {
     } else {
         playerPosition.y -= ElementsSize;
         startGame();
-        console.log(playerPosition)
     }
 }
 
