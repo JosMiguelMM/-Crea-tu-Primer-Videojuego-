@@ -9,8 +9,8 @@ let lives = 3;
 let timeStart;
 let timeInterval;
 
-const recordTime=document.querySelector('#record');
-const result=document.querySelector('#result');
+const recordTime = document.querySelector('#record');
+const result = document.querySelector('#result');
 
 const corazones = document.querySelector('#lives');
 const spanTiempo = document.querySelector('#time');
@@ -33,7 +33,7 @@ const btn_up = document.querySelector('#btn-up');
 const btn_down = document.querySelector('#btn-down');
 const btn_left = document.querySelector('#btn-left');
 const btn_right = document.querySelector('#btn-right');
-const reiniciar=document.querySelector('#btn-reset');
+const reiniciar = document.querySelector('#btn-reset');
 
 
 /*aca de pone en escucha a la funcion a continuacion y en
@@ -42,12 +42,12 @@ window.addEventListener('load', SetCanvaSive);
 
 /*evento que escucha el cambio en el tamaño de la ventana dinamicamente*/
 window.addEventListener('resize', SetCanvaSive);
-reiniciar.addEventListener('click',resetN);
+reiniciar.addEventListener('click', resetN);
 
-function resetN(){
-    level=0;
-    lives=3;
-    timeStart=undefined;
+function resetN() {
+    level = 0;
+    lives = 3;
+    timeStart = undefined;
     playerPosition.x = undefined;
     playerPosition.y = undefined;
     SetCanvaSive();
@@ -94,7 +94,7 @@ function startGame() {
     showLives();
     showRecordTime();
 
-    if(!timeStart){
+    if (!timeStart) {
         timeStart = Date.now();
         timeInterval = setInterval(showTime, 100);
     }
@@ -184,23 +184,24 @@ function levelWin() {
 function gameWin() {
     alert('Terminaste el juego');
     clearInterval(timeInterval);
-    const recordTime=localStorage.getItem('record_time');
-    let playerTime = Date.now()- timeStart;
-    if(recordTime){
-        if(recordTime>=playerTime){
-            localStorage.setItem('record_time',playerTime);
+    const recordTime = localStorage.getItem('record_time');
+    let playerTime = Date.now() - timeStart;
+    if (recordTime) {
+        if (recordTime >= playerTime) {
+            localStorage.setItem('record_time', playerTime);
             result.innerHTML = 'Nuevo record alcanzado';
-        }else{
-            result.innerHTML='No superaste el record';
+        } else {
+            result.innerHTML = 'No superaste el record';
         }
-    }else{
-        localStorage.setItem('record_time',playerTime);
+    } else {
+        localStorage.setItem('record_time', playerTime);
         alert('Nuevo record');
     }
 }
 
 function levelFail() {
     lives--;
+    game.fillText(emojis['BLOW'], playerPosition.x, playerPosition.y);
     if (lives <= 0) {
         level = 0;
         lives = 3;
@@ -208,7 +209,6 @@ function levelFail() {
     }
     playerPosition.x = undefined;
     playerPosition.y = undefined;
-    game.fillText(emojis['BLOW'],playerPosition.x, playerPosition.y);
     setTimeout(startGame, 500);
 }
 
@@ -221,12 +221,12 @@ function showLives() {
     //console.log(heartArray);
 }
 
-function showTime(){
-    spanTiempo.innerHTML=Date.now()-timeStart;
+function showTime() {
+    spanTiempo.innerHTML = Date.now() - timeStart;
 }
 
-function showRecordTime(){
-    record.innerHTML=localStorage.getItem('record_time');
+function showRecordTime() {
+    record.innerHTML = localStorage.getItem('record_time');
 }
 
 //PARA BOTONES DEL TECLADO DE WINDOWS
