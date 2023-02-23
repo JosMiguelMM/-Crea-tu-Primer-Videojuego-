@@ -5,6 +5,7 @@ let canvasSize;
 let ElementsSize;
 let level = 0;
 let lives = 3;
+//git
 
 let timeStart;
 let timeInterval;
